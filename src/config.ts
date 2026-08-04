@@ -18,10 +18,15 @@ export const socialLinks = [
   },
 ];
 
+// Public Web3Forms access key — safe to expose client-side (that's how it works).
+// Get yours free at https://web3forms.com: enter the inbox you want messages
+// delivered to, then paste the emailed key here. Until then the form won't send.
+export const contactFormAccessKey = "3685bdad-5f13-46f0-8ae1-9aee9a618baa";
+
 export const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Work", href: "/work" },
-  { label: "Contact", href: "/contact" },
+  { label: "Work", href: "#work" },
+  { label: "Skills", href: "#skills" },
+  { label: "Contact", href: "#contact" },
 ];
 
 // Grouped skills, shown on the Work page.
