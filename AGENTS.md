@@ -29,13 +29,11 @@ Static site: **Astro 7** + **React 19** (islands) + **Tailwind CSS 4** (via the
 - `src/layouts/BaseLayout.astro` — the only page shell: `<head>`/SEO/OG meta,
   Google Fonts, `<ClientRouter />` (Astro View Transitions for smooth page
   changes), plus `Nav` and `Footer`. Every page wraps its content in this.
-- `src/content.config.ts` — two content collections loaded from Markdown via the
-  glob loader, with Zod schemas:
+- `src/content.config.ts` — one content collection loaded from Markdown via the
+  glob loader, with a Zod schema:
   - `work` → `src/content/work/*.md` (experience entries; sorted by `order` desc)
-  - `blog` → `src/content/blog/*.md` (posts; `draft: true` hides a post; sorted by `date` desc)
-  Add content by dropping a `.md` file in the matching folder — no code changes needed.
-- `src/pages/` — file-based routes: `index` (hero/bio/featured), `work`, `contact`,
-  `blog/index`, `blog/[...slug]` (renders a post; excludes drafts via `getStaticPaths`).
+  Add an entry by dropping a `.md` file in the folder — no code changes needed.
+- `src/pages/` — file-based routes: `index` (hero/bio/featured), `work`, `contact`.
 - `src/components/` — `.astro` components render to zero-JS HTML. React components
   (`.tsx`, e.g. `TypingTagline.tsx`) only ship JS when mounted with a `client:*`
   directive; use React only where interactivity is actually needed.
