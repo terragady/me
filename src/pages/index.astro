@@ -314,15 +314,69 @@ const scholar = "https://scholar.google.no/citations?user=hTTPcNsAAAAJ";
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
-      // Scroll-driven parallax on the background glow + hide the scroll cue.
-      // Ambient drift keeps the glow alive at rest; scrolling pushes it faster.
+      // Scroll-driven background-glow colours + hide the scroll cue.
+      // A ring of pastel hues is walked continuously as you scroll (no snapping
+      // to sections), and the three blobs each sit at a different point on the
+      // ring so several distinct hues are on screen at once.
+      const root = document.documentElement;
       const glow = document.querySelector<HTMLElement>(".page-glow");
       const scrollCue = document.querySelector<HTMLElement>(".scroll-cue");
+
+      // Aurora bands, evenly spaced around the wheel (all hues weighted equally).
+      const palette: [number, number, number][] = [
+        [70, 240, 170], // aurora green
+        [45, 212, 191], // teal
+        [56, 200, 230], // cyan
+        [96, 165, 250], // blue
+        [129, 140, 248], // indigo
+        [167, 139, 250], // violet
+        [192, 132, 252], // purple
+        [232, 121, 249], // magenta
+        [244, 114, 182], // pink
+        [251, 113, 133], // rose
+      ];
+      // Interpolate the ring at a cyclic position t (0..1) → an [r,g,b].
+      const hueAt = (t: number): [number, number, number] => {
+        const n = palette.length;
+        const x = (((t % 1) + 1) % 1) * n;
+        const i = Math.floor(x);
+        const f = x - i;
+        const a = palette[i % n];
+        const b = palette[(i + 1) % n];
+        return [
+          Math.round(a[0] + (b[0] - a[0]) * f),
+          Math.round(a[1] + (b[1] - a[1]) * f),
+          Math.round(a[2] + (b[2] - a[2]) * f),
+        ];
+      };
+      const rgba = (c: [number, number, number], alpha: number) =>
+        `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${alpha})`;
+
+      // Hue position combines a slow, always-on ambient drift (so the colours
+      // keep shifting even at rest, like a real aurora) with the scroll offset.
+      let ambient = 0; // palette loops accumulated over time
+      let scrollHue = 0; // palette offset from scroll position (~1.5 loops/page)
+      const AMBIENT_RATE = 1 / 55000; // one full palette loop ≈ 55s at rest
+
+      const paintColours = () => {
+        const t = ambient + scrollHue;
+        root.style.setProperty("--glow-1", rgba(hueAt(t), 0.24));
+        root.style.setProperty("--glow-2", rgba(hueAt(t + 0.16), 0.24));
+        root.style.setProperty("--glow-3", rgba(hueAt(t + 0.33), 0.2));
+      };
+
       let ticking = false;
       const onScroll = () => {
         const y = window.scrollY;
-        if (glow && !reduce) {
-          glow.style.setProperty("--scroll-shift", `${y * -0.15}px`);
+        if (!reduce) {
+          const max = root.scrollHeight - window.innerHeight;
+          const progress = max > 0 ? y / max : 0;
+          scrollHue = progress * 1.5;
+          paintColours();
+          // Gentle whole-field rotation instead of an upward parallax slide.
+          if (glow) {
+            glow.style.setProperty("--scroll-rotate", `${progress * 12}deg`);
+          }
         }
         if (scrollCue) {
           scrollCue.classList.toggle("is-hidden", y > 24);
@@ -340,6 +394,26 @@ const scholar = "https://scholar.google.no/citations?user=hTTPcNsAAAAJ";
         { passive: true },
       );
       onScroll();
+
+      // Ambient colour loop. rAF auto-pauses when the tab is hidden; colour
+      // repaints are throttled to ~12fps since the drift is slow anyway.
+      if (!reduce) {
+        let prev: number | null = null;
+        let lastPaint = 0;
+        const tick = (now: number) => {
+          if (prev === null) prev = now;
+          // Clamp dt so returning to a backgrounded tab doesn't jump the hue.
+          const dt = Math.min(now - prev, 100);
+          prev = now;
+          ambient += dt * AMBIENT_RATE;
+          if (now - lastPaint > 80) {
+            lastPaint = now;
+            paintColours();
+          }
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
 
       // Reveal-on-scroll
       const revealEls = document.querySelectorAll<HTMLElement>(".reveal");
@@ -360,14 +434,7 @@ const scholar = "https://scholar.google.no/citations?user=hTTPcNsAAAAJ";
         revealEls.forEach((el) => revealObserver.observe(el));
       }
 
-      // Scroll-spy (active nav link) + per-section background glow.
-      // Each section gets a distinct pastel pair [top-right, bottom-left].
-      const glowBySection: Record<string, [string, string]> = {
-        home: ["rgba(94, 234, 212, 0.26)", "rgba(56, 189, 248, 0.24)"], // teal + sky
-        work: ["rgba(129, 140, 248, 0.26)", "rgba(244, 114, 182, 0.24)"], // periwinkle + pink
-        skills: ["rgba(192, 132, 252, 0.26)", "rgba(251, 146, 60, 0.22)"], // lavender + peach
-        contact: ["rgba(74, 222, 128, 0.26)", "rgba(45, 212, 191, 0.24)"], // mint + teal
-      };
+      // Scroll-spy: highlight the active nav link for the section in view.
       const navLinks =
         document.querySelectorAll<HTMLAnchorElement>("[data-nav]");
       const sections =
@@ -384,11 +451,6 @@ const scholar = "https://scholar.google.no/citations?user=hTTPcNsAAAAJ";
                 link.getAttribute("href") === `#${id}`,
               ),
             );
-            const pair = glowBySection[id];
-            if (pair) {
-              document.documentElement.style.setProperty("--glow-1", pair[0]);
-              document.documentElement.style.setProperty("--glow-2", pair[1]);
-            }
           });
         },
         { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
