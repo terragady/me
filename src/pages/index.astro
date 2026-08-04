@@ -1,0 +1,123 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TypingTagline from "../components/TypingTagline.tsx";
+import { site, socialLinks } from "../config";
+
+const work = (await getCollection("work"))
+  .sort((a, b) => b.data.order - a.data.order)
+  .slice(0, 3);
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const dateFmt = (d: Date) =>
+  d.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" });
+---
+
+<BaseLayout>
+  <section class="animate-rise">
+    <p class="font-mono text-sm text-muted">Hi, my name is</p>
+    <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+      {site.name}
+    </h1>
+    <p class="mt-4 text-lg text-muted">
+      <TypingTagline
+        client:load
+        phrases={[site.role, "I build things for the web.", "Based in Norway."]}
+      />
+    </p>
+
+    <!-- TODO: replace with your real bio -->
+    <p class="mt-8 max-w-2xl leading-relaxed text-fg/90">
+      This is a short introduction about you — what you do, what you care about,
+      and what you're working on. Keep it to a few sentences. Edit this in
+      <code class="font-mono text-accent">src/pages/index.astro</code>.
+    </p>
+
+    <div class="mt-8 flex flex-wrap gap-4 text-sm">
+      <a
+        href="/contact"
+        class="rounded-md bg-accent px-4 py-2 font-medium text-[#04231e] transition-opacity hover:opacity-90"
+      >
+        Get in touch
+      </a>
+      {
+        socialLinks
+          .filter((l) => l.label !== "Email")
+          .map((l) => (
+            <a
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rounded-md border border-border px-4 py-2 font-medium text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              {l.label}
+            </a>
+          ))
+      }
+    </div>
+  </section>
+
+  {
+    work.length > 0 && (
+      <section class="mt-20">
+        <div class="flex items-baseline justify-between">
+          <h2 class="text-xl font-semibold">Selected work</h2>
+          <a href="/work" class="text-sm text-muted hover:text-accent">
+            View all →
+          </a>
+        </div>
+        <ul class="mt-6 space-y-4">
+          {work.map((item) => (
+            <li>
+              <a
+                href={`/work#${item.id}`}
+                class="block rounded-lg border border-border bg-surface/50 p-5 transition-colors hover:border-accent/60"
+              >
+                <div class="flex items-center justify-between gap-4">
+                  <h3 class="font-medium">{item.data.title}</h3>
+                  {item.data.period && (
+                    <span class="font-mono text-xs text-muted">
+                      {item.data.period}
+                    </span>
+                  )}
+                </div>
+                <p class="mt-2 text-sm text-muted">{item.data.summary}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    posts.length > 0 && (
+      <section class="mt-20">
+        <div class="flex items-baseline justify-between">
+          <h2 class="text-xl font-semibold">Latest writing</h2>
+          <a href="/blog" class="text-sm text-muted hover:text-accent">
+            All posts →
+          </a>
+        </div>
+        <ul class="mt-6 space-y-3">
+          {posts.map((post) => (
+            <li class="flex items-baseline justify-between gap-4">
+              <a
+                href={`/blog/${post.id}`}
+                class="text-fg/90 transition-colors hover:text-accent"
+              >
+                {post.data.title}
+              </a>
+              <time class="shrink-0 font-mono text-xs text-muted" datetime={post.data.date.toISOString()}>
+                {dateFmt(post.data.date)}
+              </time>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>

@@ -1,0 +1,60 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const work = (await getCollection("work")).sort(
+  (a, b) => b.data.order - a.data.order,
+);
+---
+
+<BaseLayout title="Work" description="Projects, roles and experience.">
+  <h1 class="text-3xl font-bold tracking-tight">Work</h1>
+  <p class="mt-3 text-muted">Projects, roles and things I've built.</p>
+
+  <div class="mt-10 space-y-10">
+    {
+      work.map(async (item) => {
+        const { Content } = await render(item);
+        return (
+          <article id={item.id} class="scroll-mt-24 border-l border-border pl-6">
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 class="text-xl font-semibold">
+                {item.data.link ? (
+                  <a
+                    href={item.data.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:text-accent"
+                  >
+                    {item.data.title} ↗
+                  </a>
+                ) : (
+                  item.data.title
+                )}
+              </h2>
+              {item.data.period && (
+                <span class="font-mono text-xs text-muted">{item.data.period}</span>
+              )}
+            </div>
+            {item.data.role && (
+              <p class="mt-1 text-sm text-accent">{item.data.role}</p>
+            )}
+            <p class="mt-3 text-fg/90">{item.data.summary}</p>
+            <div class="prose prose-invert mt-3 max-w-none text-sm text-muted">
+              <Content />
+            </div>
+            {item.data.tags.length > 0 && (
+              <ul class="mt-4 flex flex-wrap gap-2">
+                {item.data.tags.map((tag) => (
+                  <li class="rounded-full border border-border px-3 py-1 font-mono text-xs text-muted">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </article>
+        );
+      })
+    }
+  </div>
+</BaseLayout>

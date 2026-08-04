@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, socialLinks } from "../config";
+---
+
+<BaseLayout title="Contact" description="Get in touch with Marcin Michalik.">
+  <h1 class="text-3xl font-bold tracking-tight">Contact</h1>
+  <p class="mt-4 max-w-2xl leading-relaxed text-fg/90">
+    The best way to reach me is by email. I'm also on the platforms below.
+  </p>
+
+  <a
+    href={`mailto:${site.email}`}
+    class="mt-8 inline-block font-mono text-lg text-accent hover:underline"
+  >
+    {site.email}
+  </a>
+
+  <ul class="mt-10 space-y-3">
+    {
+      socialLinks
+        .filter((l) => l.label !== "Email")
+        .map((l) => (
+          <li>
+            <a
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-muted transition-colors hover:text-accent"
+            >
+              {l.label} ↗
+            </a>
+          </li>
+        ))
+    }
+  </ul>
+</BaseLayout>
