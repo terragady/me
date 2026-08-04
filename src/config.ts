@@ -7,7 +7,6 @@ export const site = {
     "Marcin Michalik — Senior full-stack developer in Oslo. React, TypeScript, Node.js. Projects, writing and contact.",
   url: "https://michalik.no",
   location: "Oslo, Norway",
-  email: "marcinxmichalik@gmail.com",
 };
 
 export const socialLinks = [
@@ -17,7 +16,6 @@ export const socialLinks = [
     label: "Google Scholar",
     href: "https://scholar.google.no/citations?user=hTTPcNsAAAAJ",
   },
-  { label: "Email", href: `mailto:${site.email}` },
 ];
 
 export const navLinks = [
@@ -58,6 +56,3 @@ export const skills: { group: string; items: string }[] = [
     items: "TDD, Jest / Mocha / Playwright, Agile / Scrum, Jira / Confluence / Monday",
   },
 ];
-
-// Path to the downloadable CV in /public.
-export const cvPath = "/Marcin_Michalik_CV.pdf";
