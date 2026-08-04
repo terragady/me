@@ -62,8 +62,11 @@ body {
 .page-glow::after {
   content: "";
   position: absolute;
-  width: 75vw;
-  height: 75vw;
+  /* Size off the larger viewport dimension so the blobs stay big on tall,
+     narrow phones (where 75vw alone would be tiny and only peek in from the
+     top/bottom edges). */
+  width: max(75vw, 65vh);
+  height: max(75vw, 65vh);
   border-radius: 50%;
   will-change: transform;
 }
