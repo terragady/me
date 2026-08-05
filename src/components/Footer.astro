@@ -1,5 +1,6 @@
 ---
 import { socialLinks, site } from "../config";
+import SocialIcon from "./SocialIcon.astro";
 const year = new Date().getFullYear();
 ---
 
@@ -14,10 +15,11 @@ const year = new Date().getFullYear();
           <li>
             <a
               href={link.href}
-              class="transition-colors hover:text-accent"
+              class="inline-flex items-center gap-2 transition-colors hover:text-accent"
               target={link.href.startsWith("http") ? "_blank" : undefined}
               rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
             >
+              <SocialIcon name={link.icon} class="h-4 w-4" />
               {link.label}
             </a>
           </li>
