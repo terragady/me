@@ -10,13 +10,18 @@ export const site = {
 };
 
 export const socialLinks = [
-  { label: "GitHub", href: "https://github.com/terragady" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/marcin-michalik/" },
+  { label: "GitHub", href: "https://github.com/terragady", icon: "github" },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/marcin-michalik/",
+    icon: "linkedin",
+  },
   {
     label: "Google Scholar",
     href: "https://scholar.google.no/citations?user=hTTPcNsAAAAJ",
+    icon: "scholar",
   },
-];
+] as const;
 
 // Public Web3Forms access key — safe to expose client-side (that's how it works).
 // Get yours free at https://web3forms.com: enter the inbox you want messages

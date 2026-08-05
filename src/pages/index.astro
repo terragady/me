@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TypingTagline from "../components/TypingTagline.tsx";
+import SocialIcon from "../components/SocialIcon.astro";
 import { site, socialLinks, skills, contactFormAccessKey } from "../config";
 
 const work = (await getCollection("work")).sort(
@@ -81,8 +82,9 @@ const scholar =
               href={l.href}
               target="_blank"
               rel="noopener noreferrer"
-              class="rounded-md border border-border bg-surface/60 px-4 py-2 font-medium text-fg/80 transition-colors hover:border-accent hover:bg-surface hover:text-accent"
+              class="inline-flex items-center gap-2 rounded-md border border-border bg-surface/60 px-4 py-2 font-medium text-fg/80 transition-colors hover:border-accent hover:bg-surface hover:text-accent"
             >
+              <SocialIcon name={l.icon} class="h-4 w-4" />
               {l.label}
             </a>
           ))
@@ -299,8 +301,9 @@ const scholar =
               href={l.href}
               target="_blank"
               rel="noopener noreferrer"
-              class="text-muted transition-colors hover:text-accent"
+              class="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-accent"
             >
+              <SocialIcon name={l.icon} class="h-3.5 w-3.5" />
               {l.label} ↗
             </a>
           </>
