@@ -32,7 +32,8 @@ const publications = [
   "Michalik M, Djahanshiri B, Leo JC, Linke D (2016). Reverse Vaccinology: The Pathway from Genomes and Epitope Predictions to Tailored Recombinant Vaccines. Methods Mol Biol 1403:87–106.",
 ];
 
-const scholar = "https://scholar.google.no/citations?user=hTTPcNsAAAAJ";
+const scholar =
+  socialLinks.find((l) => l.label === "Google Scholar")?.href ?? "#";
 ---
 
 <BaseLayout>

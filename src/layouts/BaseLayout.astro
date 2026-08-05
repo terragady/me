@@ -12,7 +12,7 @@ interface Props {
 const { title, description = site.description } = Astro.props;
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name}`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
-const ogImage = new URL("/og.png", site.url).href; // TODO: add public/og.png
+const ogImage = new URL("/og.png", site.url).href;
 ---
 
 <!doctype html>

@@ -27,13 +27,14 @@ Static site: **Astro 7** + **React 19** (islands) + **Tailwind CSS 4** (via the
 - `src/config.ts` — single source of truth for name, role, `socialLinks`, `navLinks`
   and `skills`. Prefer editing this over hardcoding these values in pages.
 - `src/layouts/BaseLayout.astro` — the only page shell: `<head>`/SEO/OG meta,
-  Google Fonts, `<ClientRouter />` (Astro View Transitions for smooth page
-  changes), plus `Nav` and `Footer`. Every page wraps its content in this.
+  Google Fonts, plus `Nav` and `Footer`. Every page wraps its content in this.
 - `src/content.config.ts` — one content collection loaded from Markdown via the
   glob loader, with a Zod schema:
   - `work` → `src/content/work/*.md` (experience entries; sorted by `order` desc)
   Add an entry by dropping a `.md` file in the folder — no code changes needed.
-- `src/pages/` — file-based routes: `index` (hero/bio/featured), `work`, `contact`.
+- `src/pages/` — file-based routes. The site is a one-pager: `index.astro`
+  renders the hero, `work`, `skills` and `contact` sections, navigated via
+  in-page anchor links (`#work`, `#skills`, `#contact`).
 - `src/components/` — `.astro` components render to zero-JS HTML. React components
   (`.tsx`, e.g. `TypingTagline.tsx`) only ship JS when mounted with a `client:*`
   directive; use React only where interactivity is actually needed.

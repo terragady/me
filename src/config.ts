@@ -29,7 +29,7 @@ export const navLinks = [
   { label: "Contact", href: "#contact" },
 ];
 
-// Grouped skills, shown on the Work page.
+// Grouped skills, shown in the Skills section on the home page.
 export const skills: { group: string; items: string }[] = [
   {
     group: "Languages & Frameworks",
