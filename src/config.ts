@@ -94,7 +94,7 @@ export const education: { degree: string; org: string; note: string }[] = [
 export const publications: string[] = [
   "Michalik M, et al. (2017). An evolutionarily conserved glycine-tyrosine motif forms a folding core in outer membrane proteins. PLoS One 12:e0182016.",
   "Meuskens I, Michalik M, et al. (2017). A New Strain Collection for Improved Expression of Outer Membrane Proteins. Front Cell Infect Microbiol 7:464.",
-  "Michalik M, Djahanshiri B, Leo JC, Linke D (2016). Reverse Vaccinology: The Pathway from Genomes and Epitope Predictions to Tailored Recombinant Vaccines. Methods Mol Biol 1403:87–106.",
+  "Michalik M, Djahanshiri B, Leo JC, Linke D (2016). Reverse Vaccinology: The Pathway from Genomes and Epitope Predictions to Tailored Recombinant Vaccines. Methods Mol Biol 1403:87–106 (updated 2022).",
 ];
 
 export const languages: { name: string; level: string }[] = [
