@@ -3,35 +3,20 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TypingTagline from "../components/TypingTagline.tsx";
 import SocialIcon from "../components/SocialIcon.astro";
-import { site, socialLinks, skills, contactFormAccessKey } from "../config";
+import {
+  site,
+  socialLinks,
+  skills,
+  education,
+  publications,
+  languages,
+  interests,
+  contactFormAccessKey,
+} from "../config";
 
 const work = (await getCollection("work")).sort(
   (a, b) => b.data.order - a.data.order,
 );
-
-const education = [
-  {
-    degree: "PhD, Protein Evolution",
-    org: "Max Planck Institute for Developmental Biology, Tübingen",
-    note: "2013–2017 (from 2014 at University of Oslo, Dept. of Biosciences, EVOGENE)",
-  },
-  {
-    degree: "MSc, Biotechnology",
-    org: "Maria Curie-Skłodowska University, Lublin",
-    note: "2010–2012",
-  },
-  {
-    degree: "BSc, Biotechnology",
-    org: "Maria Curie-Skłodowska University, Lublin",
-    note: "2007–2010",
-  },
-];
-
-const publications = [
-  "Michalik M, et al. (2017). An evolutionarily conserved glycine-tyrosine motif forms a folding core in outer membrane proteins. PLoS One 12:e0182016.",
-  "Meuskens I, Michalik M, et al. (2017). A New Strain Collection for Improved Expression of Outer Membrane Proteins. Front Cell Infect Microbiol 7:464.",
-  "Michalik M, Djahanshiri B, Leo JC, Linke D (2016). Reverse Vaccinology: The Pathway from Genomes and Epitope Predictions to Tailored Recombinant Vaccines. Methods Mol Biol 1403:87–106.",
-];
 
 const scholar =
   socialLinks.find((l) => l.label === "Google Scholar")?.href ?? "#";
@@ -189,6 +174,33 @@ const scholar =
     <ul class="mt-4 space-y-3 text-sm text-muted">
       {publications.map((p) => <li class="reveal border-l border-border pl-4">{p}</li>)}
     </ul>
+
+    <div class="mt-16 grid gap-12 sm:grid-cols-2">
+      <div>
+        <h3 class="reveal text-xl font-semibold">Languages</h3>
+        <ul class="mt-6 space-y-2 text-sm">
+          {
+            languages.map((l) => (
+              <li class="reveal flex items-baseline justify-between gap-4 border-b border-border/60 pb-2">
+                <span class="text-fg/90">{l.name}</span>
+                <span class="font-mono text-xs text-muted">{l.level}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="reveal text-xl font-semibold">Interests</h3>
+        <ul class="mt-6 space-y-3 text-sm text-muted">
+          {
+            interests.map((interest) => (
+              <li class="reveal border-l border-border pl-4">{interest}</li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
   </section>
 
   <!-- CONTACT -->
