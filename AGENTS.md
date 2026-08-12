@@ -24,8 +24,9 @@ content collections and fails on broken references, so run it before committing.
 Static site: **Astro 7** + **React 19** (islands) + **Tailwind CSS 4** (via the
 `@tailwindcss/vite` plugin — no `tailwind.config.js`; design tokens live in CSS).
 
-- `src/config.ts` — single source of truth for name, role, `socialLinks`, `navLinks`
-  and `skills`. Prefer editing this over hardcoding these values in pages.
+- `src/config.ts` — single source of truth for name, role, `socialLinks`, `navLinks`,
+  `skills`, `education`, `publications`, `languages` and `interests`. Prefer editing
+  this over hardcoding these values in pages.
 - `src/layouts/BaseLayout.astro` — the only page shell: `<head>`/SEO/OG meta,
   Google Fonts, plus `Nav` and `Footer`. Every page wraps its content in this.
 - `src/content.config.ts` — one content collection loaded from Markdown via the
@@ -38,6 +39,22 @@ Static site: **Astro 7** + **React 19** (islands) + **Tailwind CSS 4** (via the
 - `src/components/` — `.astro` components render to zero-JS HTML. React components
   (`.tsx`, e.g. `TypingTagline.tsx`) only ship JS when mounted with a `client:*`
   directive; use React only where interactivity is actually needed.
+
+### Syncing from the CV
+
+The CV lives in a **separate repo** — `terragady/cv`, a Typst document whose
+content is all in `cv.typ`. It is **upstream**: for any fact that appears in both
+places (roles, dates, bullets, skills, education, publications, languages,
+interests), the CV wins.
+
+There is no automated sync. Ask for it — *"sync from the CV"* — and the
+`sync-cv` skill (`.claude/skills/sync-cv/SKILL.md`) handles it: it fetches
+`cv.typ` from GitHub via `gh` (the repo is private, so unauthenticated raw URLs
+won't work), diffs it field-by-field against this repo, and applies the changes.
+
+That skill holds the full mapping table, the site-only fields that must never be
+overwritten, and the divergences that are deliberate. Keep it as the single
+source for those rules rather than restating them here.
 
 ### Styling
 
