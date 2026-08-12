@@ -42,37 +42,19 @@ Static site: **Astro 7** + **React 19** (islands) + **Tailwind CSS 4** (via the
 
 ### Syncing from the CV
 
-The CV is a **separate repo** — `github.com/terragady/cv`, cloned locally at
-`~/Documents/cv`. It is a Typst document; all content lives in `cv.typ`.
+The CV lives in a **separate repo** — `terragady/cv`, a Typst document whose
+content is all in `cv.typ`. It is **upstream**: for any fact that appears in both
+places (roles, dates, bullets, skills, education, publications, languages,
+interests), the CV wins.
 
-**The CV is upstream.** For any fact that appears in both places (roles, dates,
-bullets, skills, education, publications, languages, interests), `cv.typ` wins.
-There is no automated sync — on request ("sync from the CV"), read `cv.typ`, diff
-it against the table below, and apply the changes here.
+There is no automated sync. Ask for it — *"sync from the CV"* — and the
+`sync-cv` skill (`.claude/skills/sync-cv/SKILL.md`) handles it: it fetches
+`cv.typ` from GitHub via `gh` (the repo is private, so unauthenticated raw URLs
+won't work), diffs it field-by-field against this repo, and applies the changes.
 
-| `cv.typ` | This repo |
-| --- | --- |
-| `#entry(role, org, location, dates)` + bullets | `src/content/work/<slug>.md` → `role`, `title`, `period`, body |
-| `#section("Skills")` `*Group:* items` lines | `skills` in `src/config.ts` |
-| `#section("Education")` | `education` in `src/config.ts` |
-| `#section("Selected Publications")` | `publications` in `src/config.ts` |
-| `#section("Languages")` | `languages` in `src/config.ts` |
-| `#section("Interests")` | `interests` in `src/config.ts` |
-| `#header(tagline:)` | `site.role` in `src/config.ts` |
-| `#header(contacts:)` links | `socialLinks` in `src/config.ts` |
-
-**Site-only — never overwrite from the CV:** the `summary`, `tags` and `order`
-frontmatter on work entries, the hero paragraph and `TypingTagline` phrases in
-`index.astro`, and everything in the contact section.
-
-**Deliberate divergences — do not "fix" these:**
-
-- The CV lists a phone number and personal email; the site uses the contact form
-  instead, and deliberately publishes neither.
-- Publication entries are abbreviated here (`et al.`); the CV carries the full
-  author lists.
-- Site prose is condensed relative to the CV's fuller phrasing. Keep meaning in
-  step, not wording character-for-character.
+That skill holds the full mapping table, the site-only fields that must never be
+overwritten, and the divergences that are deliberate. Keep it as the single
+source for those rules rather than restating them here.
 
 ### Styling
 
