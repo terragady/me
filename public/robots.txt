@@ -1,0 +1,17 @@
+# michalik.no is meant to be indexed — everything is crawlable except /cv/.
+#
+# /cv/ holds an AES-256-GCM encrypted copy of my CV, unlocked in the browser by
+# the download button in the footer. There is nothing readable in it to scrape,
+# but there is also no reason for a crawler to spend requests on a binary blob.
+# robots.txt is the only lever available for non-HTML assets on GitHub Pages: a
+# noindex <meta> tag doesn't apply to a .enc file, and an X-Robots-Tag header
+# would be the usual answer but Pages cannot set headers.
+#
+# Nothing sensitive is named here on purpose. robots.txt is itself public, so
+# listing a path is a way of publishing it, not of hiding it.
+
+User-agent: *
+Allow: /
+Disallow: /cv/
+
+Sitemap: https://michalik.no/sitemap-index.xml

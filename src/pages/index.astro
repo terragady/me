@@ -303,25 +303,8 @@ const scholar =
       </div>
     </form>
 
-    <p class="reveal mt-10 text-sm text-muted">
-      Or find me on{" "}
-      {
-        socialLinks.map((l, i) => (
-          <>
-            {i > 0 && <span class="text-border"> · </span>}
-            <a
-              href={l.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-accent"
-            >
-              <SocialIcon name={l.icon} class="h-3.5 w-3.5" />
-              {l.label} ↗
-            </a>
-          </>
-        ))
-      }
-    </p>
+    <!-- No social links here on purpose: the footer sits immediately below this
+         section and already lists the same three, plus the CV download. -->
   </section>
 
   <script>
