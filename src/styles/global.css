@@ -243,6 +243,15 @@ section[data-section] {
     color: inherit;
     text-decoration: none;
   }
+
+  /* Tailwind v4's preflight deliberately dropped v3's `button { cursor: pointer }`
+     in favour of the browser default, which is `cursor: default` — so every
+     button on the site got the arrow cursor. Restore the pointer, but not on
+     disabled buttons, which should keep showing they can't be clicked. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 /* Reusable entrance animation */

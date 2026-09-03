@@ -1,0 +1,278 @@
+---
+// Passphrase-gated CV download.
+//
+// The PDF lives in this public repo at /cv/cv.pdf.enc as AES-256-GCM
+// ciphertext, published there by the private terragady/cv build. It carries a
+// phone number and personal email, so it is never served in the clear — a
+// scraper that fetches the blob gets noise. This component derives a key from
+// a typed passphrase with PBKDF2 and decrypts in the browser; what comes out
+// is an ordinary unlocked PDF, so a recruiter it's forwarded to needs nothing.
+//
+// Renders as an <li> so it can sit inside the footer's link list, with the
+// <dialog> nested alongside the trigger to keep the component self-contained.
+// A closed dialog is display:none and an open one is in the top layer, so it
+// never affects the list's layout either way.
+---
+
+<li>
+  <button
+    type="button"
+    data-cv-open
+    class="inline-flex items-center gap-2 transition-colors hover:text-accent"
+  >
+    <svg
+      class="h-4 w-4"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <path d="M14 2v6h6"></path>
+      <path d="M12 12v6"></path>
+      <path d="m9 15 3 3 3-3"></path>
+    </svg>
+    CV
+  </button>
+
+  <dialog
+    data-cv-dialog
+    aria-labelledby="cv-dialog-title"
+    class="m-auto w-[min(24rem,calc(100vw-2rem))] rounded-lg border border-border bg-surface p-6 text-fg backdrop:bg-bg/80 backdrop:backdrop-blur-sm"
+  >
+    <h2 id="cv-dialog-title" class="text-lg font-semibold tracking-tight">
+      Download my CV
+    </h2>
+    <p class="mt-2 text-sm text-muted">
+      It's stored encrypted, so it can't be scraped for contact details. Enter
+      the passphrase to unlock it — the file you get is a normal PDF.
+    </p>
+
+    <!-- Which build this is, so it's obvious at a glance whether the published
+         CV is the current one. Filled in from the manifest when the dialog
+         opens; stays empty if nothing has been published yet. -->
+    <p data-cv-meta class="mt-3 font-mono text-xs text-muted empty:hidden"></p>
+
+    <!-- Browser password managers won't offer to save this: they prompt on a
+         submit that navigates, and this form deliberately doesn't navigate —
+         it decrypts in place. Add it to the password manager by hand. -->
+    <form data-cv-form class="mt-5">
+      <label
+        for="cv-passphrase"
+        class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-muted"
+      >
+        Passphrase
+      </label>
+      <input
+        id="cv-passphrase"
+        name="password"
+        type="password"
+        required
+        autocomplete="current-password"
+        class="w-full rounded-md border border-border bg-bg px-3 py-2.5 text-base text-fg transition-colors focus:border-accent focus:outline-none"
+      />
+      <!-- text-base (16px) is deliberate, where the contact form uses text-sm:
+           iOS Safari zooms the viewport when focusing an input with smaller
+           text, and inside a modal that leaves the page awkwardly scaled. -->
+
+      <div class="mt-4 flex items-center gap-3">
+        <button
+          type="submit"
+          class="min-h-11 flex-1 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-bg transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          Unlock &amp; download
+        </button>
+        <button
+          type="button"
+          data-cv-close
+          class="min-h-11 rounded-md border border-border px-4 py-2 text-sm text-muted transition-colors hover:border-accent hover:text-accent"
+        >
+          Cancel
+        </button>
+      </div>
+
+      <p data-cv-status role="status" aria-live="polite" class="mt-3 min-h-5 text-sm"></p>
+    </form>
+  </dialog>
+</li>
+
+<script>
+  // Must match ITERATIONS in the CV repo's scripts/encrypt-cv.mjs — the two are
+  // halves of one wire format, and changing either alone breaks every download.
+  const ITERATIONS = 600_000;
+  const SALT_BYTES = 16;
+  const IV_BYTES = 12;
+
+  // Wire format written by encrypt-cv.mjs:
+  //   salt (16) || iv (12) || ciphertext || GCM tag (16)
+  // None of it is secret. Only the passphrase is — see Kerckhoffs's principle.
+  type Manifest = {
+    src: string;
+    name: string;
+    version?: string;
+    builtAt?: string;
+  };
+
+  const dialog = document.querySelector<HTMLDialogElement>("[data-cv-dialog]");
+  const openButton = document.querySelector<HTMLButtonElement>("[data-cv-open]");
+  const form = document.querySelector<HTMLFormElement>("[data-cv-form]");
+
+  if (dialog && openButton && form) {
+    const input = form.querySelector<HTMLInputElement>("#cv-passphrase");
+    const statusEl = form.querySelector<HTMLElement>("[data-cv-status]");
+    const cancelButton = form.querySelector<HTMLButtonElement>("[data-cv-close]");
+    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    const setStatus = (message: string, tone = "text-muted") => {
+      if (statusEl) {
+        statusEl.textContent = message;
+        statusEl.className = `mt-3 min-h-5 text-sm ${tone}`;
+      }
+    };
+
+    let manifestPromise: Promise<Manifest> | undefined;
+    const getManifest = () =>
+      (manifestPromise ??= fetch("/cv/manifest.json").then((response) => {
+        if (!response.ok) throw new Error("No CV has been published yet");
+        return response.json() as Promise<Manifest>;
+      }));
+
+    const decrypt = async (url: string, passphrase: string) => {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error("Could not fetch the encrypted CV");
+      const blob = new Uint8Array(await response.arrayBuffer());
+
+      const salt = blob.subarray(0, SALT_BYTES);
+      const iv = blob.subarray(SALT_BYTES, SALT_BYTES + IV_BYTES);
+      // Ciphertext and the trailing 16-byte GCM tag stay concatenated:
+      // WebCrypto expects them that way and verifies the tag on decrypt, which
+      // is what makes a wrong passphrase fail loudly rather than silently
+      // producing garbage.
+      const payload = blob.subarray(SALT_BYTES + IV_BYTES);
+
+      const baseKey = await crypto.subtle.importKey(
+        "raw",
+        new TextEncoder().encode(passphrase),
+        "PBKDF2",
+        false,
+        ["deriveKey"],
+      );
+      const key = await crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt, iterations: ITERATIONS, hash: "SHA-256" },
+        baseKey,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"],
+      );
+
+      const plaintext = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, payload);
+      return new Blob([plaintext], { type: "application/pdf" });
+    };
+
+    const metaEl = form.querySelector<HTMLElement>("[data-cv-meta]");
+
+    // Shown as e.g. "Version 1.1.2 · 3 September 2026". Fetching the manifest
+    // on open (rather than only on submit) means the build is visible before
+    // you commit to typing anything. A failure here is not worth surfacing —
+    // the submit path reports it properly.
+    const showBuildInfo = async () => {
+      if (!metaEl) return;
+      metaEl.textContent = "";
+      try {
+        const manifest = await getManifest();
+        const parts: string[] = [];
+        if (manifest.version) parts.push(`Version ${manifest.version}`);
+        const built = manifest.builtAt ? new Date(manifest.builtAt) : null;
+        if (built && !Number.isNaN(built.getTime())) {
+          parts.push(
+            built.toLocaleDateString(undefined, {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          );
+        }
+        metaEl.textContent = parts.join(" · ");
+      } catch {
+        /* Nothing published yet; leave the line empty (empty:hidden). */
+      }
+    };
+
+    openButton.addEventListener("click", () => {
+      setStatus("");
+      form.reset();
+      dialog.showModal();
+      input?.focus();
+      void showBuildInfo();
+    });
+
+    // Esc is handled natively; this covers the backdrop, which is a click on
+    // the <dialog> element itself rather than on anything inside it.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    cancelButton?.addEventListener("click", () => dialog.close());
+
+    // Never leave the passphrase sitting in a DOM node after the dialog closes.
+    dialog.addEventListener("close", () => {
+      form.reset();
+      setStatus("");
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const passphrase = input?.value;
+      if (!passphrase) return;
+
+      if (submitButton) submitButton.disabled = true;
+      setStatus("Decrypting…");
+
+      try {
+        const manifest = await getManifest();
+        const pdf = await decrypt(manifest.src, passphrase);
+
+        const url = URL.createObjectURL(pdf);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = manifest.name;
+        link.click();
+
+        // iOS Safari honours the download attribute inconsistently — it may
+        // ignore the synthetic click entirely, leaving a button that looks
+        // broken. Rather than sniff the browser, always offer a real tappable
+        // link as a fallback; on desktop the file has already saved and this
+        // is simply ignored.
+        if (statusEl) {
+          statusEl.className = "mt-3 min-h-5 text-sm text-accent";
+          statusEl.replaceChildren(
+            document.createTextNode("Ready. "),
+            Object.assign(document.createElement("a"), {
+              href: url,
+              download: manifest.name,
+              textContent: "Tap here if nothing downloaded",
+              className: "underline",
+            }),
+          );
+        }
+
+        // Revoked on a long delay: Safari aborts an in-flight download if the
+        // object URL disappears, and the fallback link above needs it alive.
+        setTimeout(() => URL.revokeObjectURL(url), 300_000);
+      } catch (error) {
+        // An AES-GCM tag mismatch throws a bare OperationError with no message,
+        // and by far the likeliest cause is a mistyped passphrase.
+        const wrongPassphrase =
+          error instanceof DOMException || !(error instanceof Error) || !error.message;
+        setStatus(
+          wrongPassphrase ? "Wrong passphrase." : error.message,
+          "text-red-400",
+        );
+      } finally {
+        if (submitButton) submitButton.disabled = false;
+      }
+    });
+  }
+</script>
