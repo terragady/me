@@ -172,7 +172,9 @@
       return new Blob([plaintext], { type: "application/pdf" });
     };
 
-    const metaEl = form.querySelector<HTMLElement>("[data-cv-meta]");
+    // Queried off the dialog, not the form: the line sits above the form, so a
+    // form-scoped lookup finds nothing and the build info never appears.
+    const metaEl = dialog.querySelector<HTMLElement>("[data-cv-meta]");
 
     // Shown as e.g. "Version 1.1.2 · 3 September 2026". Fetching the manifest
     // on open (rather than only on submit) means the build is visible before
