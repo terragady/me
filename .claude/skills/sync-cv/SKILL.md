@@ -49,6 +49,10 @@ Never overwrite from the CV:
 - `summary`, `tags` and `order` frontmatter on work entries
 - the hero paragraph and `TypingTagline` phrases in `src/pages/index.astro`
 - everything in the contact section
+- `projects` in `src/config.ts` and the Projects section — side projects live on
+  the site only, never on the CV
+- the extras the CV leaves out for space: the PhD `project` line and the Masaryk
+  University exchange in `education`, and the certificates line in `interests`
 
 ### 4. Respect the deliberate divergences
 

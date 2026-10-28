@@ -9,5 +9,6 @@ order: 40
 
 - Developed full-stack features across React front-ends and Node.js back-ends
   with PostgreSQL/MongoDB data layers.
-- Worked within QA and risk-management processes for medical-device software.
+- Worked within QA and risk-management processes for medical-device software
+  (IEC 62304, ISO 14971, ISO 13485 QMS).
 - Contributed to CI/CD workflows and containerised deployment with Docker.
