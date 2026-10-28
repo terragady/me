@@ -30,6 +30,7 @@ export const contactFormAccessKey = "3685bdad-5f13-46f0-8ae1-9aee9a618baa";
 
 export const navLinks = [
   { label: "Work", href: "#work" },
+  { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },
 ];
@@ -72,16 +73,29 @@ export const skills: { group: string; items: string }[] = [
 ];
 
 // Mirrors the CV's Education section.
-export const education: { degree: string; org: string; note: string }[] = [
+// The PhD project and the Masaryk exchange are site-only extras, not on the CV.
+export const education: {
+  degree: string;
+  org: string;
+  note: string;
+  project?: string;
+}[] = [
   {
     degree: "PhD, Protein Evolution",
     org: "Max Planck Institute for Developmental Biology, Tübingen",
     note: "2013–2017 (from 2014 at University of Oslo, Dept. of Biosciences, EVOGENE)",
+    project:
+      "Identification and evaluation of peptides for active and passive immunisation against Pseudomonas aeruginosa",
   },
   {
     degree: "MSc, Biotechnology",
     org: "Maria Curie-Skłodowska University, Lublin",
     note: "2010–2012",
+  },
+  {
+    degree: "Research exchange, Dept. of Experimental Biology",
+    org: "Masaryk University, Brno",
+    note: "2011–2012",
   },
   {
     degree: "BSc, Biotechnology",
@@ -108,4 +122,45 @@ export const interests: string[] = [
   "Sport (climbing, hiking, mountain cycling)",
   "DIY & maker projects (drones, home automation, brewing controllers, 3D printing)",
   "Following tech & AI news",
+  "Certificates: American Red Cross Lifeguard & CPR, Motorboat Helmsman License, Inshore Skipper (ISSA)",
+];
+
+// Site-only: side projects from GitHub. Not on the CV (page limit).
+export const projects: {
+  name: string;
+  description: string;
+  href: string;
+  demo?: string;
+  tags: string[];
+}[] = [
+  {
+    name: "Quiz game",
+    description:
+      "Real-time multiplayer trivia party game: a TV/host screen plus phones as controllers over WebSockets.",
+    href: "https://github.com/terragady/quiz-game",
+    demo: "https://quiz.michalik.no",
+    tags: ["TypeScript", "WebSockets"],
+  },
+  {
+    name: "Monopoly online",
+    description:
+      "Real-time multiplayer Monopoly in the browser, played over a shared room code. TypeScript pnpm monorepo with an authoritative Socket.IO game server and a React/Vite client.",
+    href: "https://github.com/terragady/monopoly-websockets",
+    demo: "https://monopoly.michalik.no",
+    tags: ["TypeScript", "React", "Vite", "Socket.IO", "Monorepo"],
+  },
+  {
+    name: "Claude Code configuration",
+    description:
+      "My personal Claude Code setup: agent skills, slash commands and stack-agnostic verification scripts.",
+    href: "https://github.com/terragady/claude_config",
+    tags: ["Claude Code", "Agent skills", "Shell"],
+  },
+  {
+    name: "MQTT LED matrix clock",
+    description:
+      "ESP8266-driven LED matrix clock with day/night brightness, notifications and OTA updates, integrated with Home Assistant over MQTT.",
+    href: "https://github.com/terragady/MQTT-clock",
+    tags: ["C++", "ESP8266", "MQTT", "Home Assistant"],
+  },
 ];

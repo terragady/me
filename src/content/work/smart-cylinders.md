@@ -2,7 +2,7 @@
 title: "Smart Cylinders AS"
 role: "Front-End Software Developer"
 period: "Jul 2021 – Mar 2023"
-summary: "Web and mobile front-ends for an IoT/hardware product with real-time device data."
+summary: "Web and mobile front-ends for an IoT platform for connected gas cylinders, used by gas suppliers and end customers."
 tags: ["React", "React Native", "WebSockets", "IoT", "GraphQL"]
 order: 50
 ---
