@@ -31,8 +31,7 @@ const scholar =
     class="relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-3xl flex-col justify-center px-6 pt-24 pb-16"
   >
     <div class="animate-rise">
-      <p class="font-mono text-sm text-muted">Hi, my name is</p>
-      <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-6xl">
+      <h1 class="text-4xl font-bold tracking-tight sm:text-6xl">
         {site.name}
       </h1>
       <p class="mt-4 text-lg text-muted">
@@ -41,18 +40,24 @@ const scholar =
           phrases={[
             "Senior Software Developer",
             "React · TypeScript · Node.js",
+            "Docker · CI/CD · cloud",
+            "Building with AI agents & MCP",
+            "C++ on ESP32 for Home Assistant",
+            "Former scientist, PhD",
             "Based in Oslo, Norway",
           ]}
         />
       </p>
 
       <p class="mt-8 max-w-2xl leading-relaxed text-fg/90">
-        Senior full-stack developer with 7+ years building and shipping production
-        web and mobile applications, currently in financial services at Storebrand.
-        I work end to end — React/TypeScript front-ends, Node.js/GraphQL back-ends,
-        and cloud/CI-CD — with a focus on quality, accessibility and maintainable
-        code. A former research scientist (PhD), I bring analytical rigour and clear
-        communication to every team.
+        Senior full-stack developer with 7+ years of professional experience, and
+        programming since I was a kid. At Storebrand I build banking products:
+        React and TypeScript front ends, the APIs behind them, and the Docker and
+        CI/CD pipelines that ship them. A lot of my work now runs through AI
+        agents. I use them every day, write skills and MCP tooling for them, and
+        build LLM features into products. Before software I was a research
+        scientist with a PhD, which is where my habit of measuring before
+        guessing comes from.
       </p>
 
       <div class="mt-8 flex flex-wrap gap-4 text-sm">
@@ -140,7 +145,11 @@ const scholar =
 
   <!-- PROJECTS -->
   <section id="projects" data-section="projects" class="mx-auto max-w-3xl px-6 py-24">
-    <h2 class="reveal text-2xl font-semibold tracking-tight">Projects</h2>
+    <h2 class="reveal text-2xl font-semibold tracking-tight">Side projects</h2>
+    <p class="reveal mt-4 max-w-2xl leading-relaxed text-fg/90">
+      Things I build in my spare time: games, home automation, hardware like a
+      brewing controller, and open-source contributions.
+    </p>
     <div class="mt-10 space-y-10">
       {
         projects.map((p) => (

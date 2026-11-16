@@ -4,7 +4,7 @@ export const site = {
   role: "Senior Software Developer · Full Stack",
   tagline: "I build production web & mobile apps end to end.",
   description:
-    "Marcin Michalik — Senior full-stack developer in Oslo. React, TypeScript, Node.js. Projects, writing and contact.",
+    "Marcin Michalik — Senior full-stack developer in Oslo. Web, mobile and AI-assisted development. Experience, side projects and contact.",
   url: "https://michalik.no",
   location: "Oslo, Norway",
 };
