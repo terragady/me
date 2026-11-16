@@ -16,9 +16,9 @@ export default function TypingTagline({ phrases }: Props) {
     const done = text === current;
     const cleared = text === "";
 
-    let delay = deleting ? 40 : 70;
+    let delay = deleting ? 20 : 40;
     if (done && !deleting) delay = 1600;
-    if (cleared && deleting) delay = 300;
+    if (cleared && deleting) delay = 200;
 
     const timer = setTimeout(() => {
       if (!deleting && done) {
