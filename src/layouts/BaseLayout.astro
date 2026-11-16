@@ -54,5 +54,15 @@ const ogImage = new URL("/og.png", site.url).href;
       <slot />
     </main>
     <Footer />
+    <script>
+      const accent = getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-accent")
+        .trim();
+      console.log(
+        "%cHi, fellow developer.%c\nThis site is open source: https://github.com/terragady/me\nThe CV download is decrypted in your browser with the Web Crypto API.\nWant to talk? https://michalik.no/#contact",
+        `color: ${accent}; font: 600 14px/1.6 monospace;`,
+        "font: 12px/1.6 monospace;",
+      );
+    </script>
   </body>
 </html>

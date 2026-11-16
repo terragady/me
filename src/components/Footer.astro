@@ -9,7 +9,20 @@ const year = new Date().getFullYear();
   <div
     class="mx-auto flex max-w-3xl flex-col gap-4 px-6 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
   >
-    <p>© {year} {site.name}</p>
+    <div>
+      <p>© {year} {site.name}</p>
+      <p class="mt-1 text-xs">
+        Built with Astro ·{" "}
+        <a
+          href={site.repo}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition-colors hover:text-accent"
+        >
+          Source on GitHub
+        </a>
+      </p>
+    </div>
     <ul class="flex flex-wrap gap-5">
       <CvDownload />
       {

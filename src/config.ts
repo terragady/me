@@ -6,6 +6,7 @@ export const site = {
   description:
     "Marcin Michalik — Senior full-stack developer in Oslo. Web, mobile and AI-assisted development. Experience, side projects and contact.",
   url: "https://michalik.no",
+  repo: "https://github.com/terragady/me",
   location: "Oslo, Norway",
 };
 
@@ -30,7 +31,7 @@ export const contactFormAccessKey = "3685bdad-5f13-46f0-8ae1-9aee9a618baa";
 
 export const navLinks = [
   { label: "Work", href: "#work" },
-  { label: "Projects", href: "#projects" },
+  { label: "Tinkering", href: "#projects" },
   { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },
 ];

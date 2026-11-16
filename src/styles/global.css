@@ -9,8 +9,8 @@
   --color-border: #26262c;
   --color-fg: #ededf0;
   --color-muted: #a1a1ab;
-  --color-accent: #5eead4;
-  --color-accent-strong: #2dd4bf;
+  --color-accent: #86e8ad;
+  --color-accent-strong: #5cd88f;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
@@ -233,7 +233,7 @@ section[data-section] {
 
 ::selection {
   background: var(--color-accent);
-  color: #04231e;
+  color: #06260f;
 }
 
 /* Keep this in @layer base so Tailwind text-color utilities (e.g. text-bg,
