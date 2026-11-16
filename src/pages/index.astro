@@ -34,7 +34,7 @@ const scholar =
       <h1 class="text-4xl font-bold tracking-tight sm:text-6xl">
         {site.name}
       </h1>
-      <p class="mt-4 text-lg text-muted">
+      <p class="mt-4 min-h-14 text-lg text-muted sm:min-h-0">
         <TypingTagline
           client:load
           phrases={[
@@ -142,7 +142,7 @@ const scholar =
 
   <!-- PROJECTS -->
   <section id="projects" data-section="projects" class="mx-auto max-w-3xl px-6 py-24">
-    <h2 class="reveal text-2xl font-semibold tracking-tight">Side projects</h2>
+    <h2 class="reveal text-2xl font-semibold tracking-tight">Tinkering</h2>
     <div class="mt-10 space-y-10">
       {
         projects.map((p) => (
@@ -241,10 +241,10 @@ const scholar =
 
       <div>
         <h3 class="reveal text-xl font-semibold">Interests</h3>
-        <ul class="mt-6 space-y-3 text-sm text-muted">
+        <ul class="mt-6 space-y-2 text-sm text-muted">
           {
             interests.map((interest) => (
-              <li class="reveal border-l border-border pl-4">{interest}</li>
+              <li class="reveal border-b border-border/60 pb-2">{interest}</li>
             ))
           }
         </ul>
