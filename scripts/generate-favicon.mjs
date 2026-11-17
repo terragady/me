@@ -1,18 +1,22 @@
-// Generates the raster icons from public/favicon.svg (the source of truth):
-//   public/favicon.ico        — 16/32/48 px, PNG-compressed ICO (legacy tabs)
-//   public/apple-touch-icon.png — 180x180, flattened (iOS home screen)
-// Run: node scripts/generate-favicon.mjs
-import sharp from "sharp";
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
-const resolve = (name) => fileURLToPath(new URL(`../public/${name}`, import.meta.url));
+// Generates the raster icons from public/favicon.svg (the source of truth):
+//   public/favicon.ico:          16/32/48 px, PNG-compressed ICO (legacy tabs)
+//   public/apple-touch-icon.png: 180x180, flattened (iOS home screen)
+// Run: node scripts/generate-favicon.mjs
+import sharp from "sharp";
+
+const resolve = (name) =>
+  fileURLToPath(new URL(`../public/${name}`, import.meta.url));
 
 const source = await readFile(resolve("favicon.svg"));
 const icoSizes = [16, 32, 48];
 
 const pngs = await Promise.all(
-  icoSizes.map((size) => sharp(source, { density: 384 }).resize(size, size).png().toBuffer()),
+  icoSizes.map((size) =>
+    sharp(source, { density: 384 }).resize(size, size).png().toBuffer(),
+  ),
 );
 
 // ICO container: 6-byte header + one 16-byte directory entry per image, then
@@ -37,7 +41,10 @@ const entries = pngs.map((png, i) => {
   return entry;
 });
 
-await writeFile(resolve("favicon.ico"), Buffer.concat([header, ...entries, ...pngs]));
+await writeFile(
+  resolve("favicon.ico"),
+  Buffer.concat([header, ...entries, ...pngs]),
+);
 
 // iOS ignores transparency and applies its own mask, so flatten onto the page bg.
 await sharp(source, { density: 384 })

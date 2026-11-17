@@ -4,7 +4,7 @@ export const site = {
   role: "Senior Software Developer · Full Stack",
   tagline: "I build production web & mobile apps end to end.",
   description:
-    "Marcin Michalik — Senior full-stack developer in Oslo. Web, mobile and AI-assisted development. Experience, side projects and contact.",
+    "Marcin Michalik, senior full-stack developer in Oslo. Web, mobile and AI-assisted development. Experience, side projects and contact.",
   url: "https://michalik.no",
   repo: "https://github.com/terragady/me",
   location: "Oslo, Norway",
@@ -24,7 +24,7 @@ export const socialLinks = [
   },
 ] as const;
 
-// Public Web3Forms access key — safe to expose client-side (that's how it works).
+// Public Web3Forms access key. It's safe to expose client-side (that's how it works).
 // Get yours free at https://web3forms.com: enter the inbox you want messages
 // delivered to, then paste the emailed key here. Until then the form won't send.
 export const contactFormAccessKey = "3685bdad-5f13-46f0-8ae1-9aee9a618baa";
@@ -65,7 +65,8 @@ export const skills: { group: string; items: string }[] = [
   },
   {
     group: "Testing & Methodology",
-    items: "TDD, Jest / Mocha / Playwright, Agile / Scrum, Jira / Confluence / Monday",
+    items:
+      "TDD, Jest / Mocha / Playwright, Agile / Scrum, Jira / Confluence / Monday",
   },
   {
     group: "Other",
@@ -105,7 +106,7 @@ export const education: {
   },
 ];
 
-// Abbreviated on purpose — the CV carries the full author lists.
+// Abbreviated on purpose; the CV carries the full author lists.
 export const publications: string[] = [
   "Michalik M, et al. (2017). An evolutionarily conserved glycine-tyrosine motif forms a folding core in outer membrane proteins. PLoS One 12:e0182016.",
   "Meuskens I, Michalik M, et al. (2017). A New Strain Collection for Improved Expression of Outer Membrane Proteins. Front Cell Infect Microbiol 7:464.",

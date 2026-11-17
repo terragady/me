@@ -6,48 +6,53 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Personal "about me" website — a static site deployed to GitHub Pages.
+Personal "about me" website: a static site deployed to GitHub Pages.
 
 ## Commands
 
-- `npm run dev` — local dev server at http://localhost:4321
-- `npm run build` — production build to `dist/`
-- `npm run preview` — serve the built `dist/` locally
-- `npm run og` — regenerate the social share image (`public/og.png`)
-- `npx astro check` — type-check `.astro` files
+- `npm run dev`: local dev server at http://localhost:4321
+- `npm run build`: production build to `dist/`
+- `npm run preview`: serve the built `dist/` locally
+- `npm run og`: regenerate the social share image (`public/og.png`)
+- `npm run check`: type-check, including `.astro` files
+- `npm run lint`: oxlint + oxfmt check; `npm run lint:fix` fixes and formats
+- `npm run format`: format with oxfmt (including `.astro` files)
 
-There is no test suite. `npm run build` is the correctness gate — it type-checks
+There is no test suite. `npm run build` is the correctness gate. It type-checks
 content collections and fails on broken references, so run it before committing.
+
+The pre-commit hook (husky) runs `astro check` and lint-staged, and CI
+(`.github/workflows/ci.yml`) runs check, lint and build on every PR.
 
 ## Architecture
 
-Static site: **Astro 7** + **React 19** (islands) + **Tailwind CSS 4** (via the
-`@tailwindcss/vite` plugin — no `tailwind.config.js`; design tokens live in CSS).
+Static site: **Astro 7** + **Tailwind CSS 4** (via the
+`@tailwindcss/vite` plugin, no `tailwind.config.js`; design tokens live in CSS).
 
-- `src/config.ts` — single source of truth for name, role, `socialLinks`, `navLinks`,
+- `src/config.ts`: single source of truth for name, role, `socialLinks`, `navLinks`,
   `skills`, `education`, `publications`, `languages` and `interests`. Prefer editing
   this over hardcoding these values in pages.
-- `src/layouts/BaseLayout.astro` — the only page shell: `<head>`/SEO/OG meta,
+- `src/layouts/BaseLayout.astro`: the only page shell: `<head>`/SEO/OG meta,
   Google Fonts, plus `Nav` and `Footer`. Every page wraps its content in this.
-- `src/content.config.ts` — one content collection loaded from Markdown via the
+- `src/content.config.ts`: one content collection loaded from Markdown via the
   glob loader, with a Zod schema:
   - `work` → `src/content/work/*.md` (experience entries; sorted by `order` desc)
-  Add an entry by dropping a `.md` file in the folder — no code changes needed.
-- `src/pages/` — file-based routes. The site is a one-pager: `index.astro`
+    Add an entry by dropping a `.md` file in the folder; no code changes needed.
+- `src/pages/`: file-based routes. The site is a one-pager: `index.astro`
   renders the hero, `work`, `skills` and `contact` sections, navigated via
   in-page anchor links (`#work`, `#skills`, `#contact`).
-- `src/components/` — `.astro` components render to zero-JS HTML. React components
-  (`.tsx`, e.g. `TypingTagline.tsx`) only ship JS when mounted with a `client:*`
-  directive; use React only where interactivity is actually needed.
+- `src/components/`: `.astro` components render to plain HTML. The little
+  interactivity there is (tagline rotator, CV dialog, background glow) is plain
+  `<script>` tags; there is no UI framework, so don't add one for small things.
 
 ### Syncing from the CV
 
-The CV lives in a **separate repo** — `terragady/cv`, a Typst document whose
+The CV lives in a **separate repo**, `terragady/cv`, a Typst document whose
 content is all in `cv.typ`. It is **upstream**: for any fact that appears in both
 places (roles, dates, bullets, skills, education, publications, languages,
 interests), the CV wins.
 
-There is no automated sync. Ask for it — *"sync from the CV"* — and the
+There is no automated sync. Ask for it (_"sync from the CV"_) and the
 `sync-cv` skill (`.claude/skills/sync-cv/SKILL.md`) handles it: it fetches
 `cv.typ` from GitHub via `gh` (the repo is private, so unauthenticated raw URLs
 won't work), diffs it field-by-field against this repo, and applies the changes.
@@ -85,6 +90,5 @@ Full documentation: https://docs.astro.build
 
 - [Routing / dynamic routes / middleware](https://docs.astro.build/en/guides/routing/)
 - [Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Framework (React/Vue/Svelte) components](https://docs.astro.build/en/guides/framework-components/)
 - [Content collections](https://docs.astro.build/en/guides/content-collections/)
 - [Styling / Tailwind](https://docs.astro.build/en/guides/styling/)

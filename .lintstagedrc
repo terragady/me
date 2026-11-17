@@ -1,0 +1,4 @@
+{
+  "*.{ts,mjs,astro}": "oxlint --type-aware --fix --no-error-on-unmatched-pattern",
+  "*.{ts,mjs,astro,json,md,css,yml,yaml}": "oxfmt --no-error-on-unmatched-pattern"
+}

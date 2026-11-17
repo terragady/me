@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
-import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import Nav from "../components/Nav.astro";
 import { site } from "../config";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { title, description = site.description } = Astro.props;
-const pageTitle = title ? `${title} — ${site.name}` : `${site.name}`;
+const pageTitle = title ? `${title} | ${site.name}` : `${site.name}`;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogImage = new URL("/og.png", site.url).href;
 ---
@@ -45,10 +45,11 @@ const ogImage = new URL("/og.png", site.url).href;
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-
   </head>
-  <body class="min-h-svh flex flex-col">
-    <div class="page-glow" aria-hidden="true"><span class="glow-blob"></span></div>
+  <body class="flex min-h-svh flex-col">
+    <div class="page-glow" aria-hidden="true">
+      <span class="glow-blob"></span>
+    </div>
     <Nav />
     <main class="flex-1">
       <slot />
