@@ -1,7 +1,8 @@
-// Generates public/og.png (1200x630) — the social share image.
+import { fileURLToPath } from "node:url";
+
+// Generates public/og.png (1200x630), the social share image.
 // Run: node scripts/generate-og.mjs
 import sharp from "sharp";
-import { fileURLToPath } from "node:url";
 
 const out = fileURLToPath(new URL("../public/og.png", import.meta.url));
 

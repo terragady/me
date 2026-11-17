@@ -1,0 +1,53 @@
+---
+interface Props {
+  phrases: string[];
+}
+
+const { phrases } = Astro.props;
+---
+
+<!-- The first phrase is in the HTML, so it shows even before (or without) JS. -->
+<span class="font-mono text-accent" data-phrases={JSON.stringify(phrases)}>
+  <span data-text>{phrases[0]}</span>
+  <span class="animate-pulse" aria-hidden="true">
+    |
+  </span>
+</span>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-phrases]");
+  const output = root?.querySelector<HTMLElement>("[data-text]");
+
+  if (root && output) {
+    const phrases: string[] = JSON.parse(root.dataset.phrases ?? "[]");
+    let index = 0;
+    let text = phrases[0] ?? "";
+    let deleting = false;
+
+    const tick = () => {
+      const current = phrases[index % phrases.length];
+      const done = text === current;
+      const cleared = text === "";
+
+      let delay = deleting ? 12 : 25;
+      if (done && !deleting) delay = 1600;
+      if (cleared && deleting) delay = 150;
+
+      setTimeout(() => {
+        if (!deleting && done) deleting = true;
+        else if (deleting && cleared) {
+          deleting = false;
+          index += 1;
+        } else {
+          text = deleting
+            ? current.slice(0, text.length - 1)
+            : current.slice(0, text.length + 1);
+          output.textContent = text;
+        }
+        tick();
+      }, delay);
+    };
+
+    tick();
+  }
+</script>

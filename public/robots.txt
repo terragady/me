@@ -1,4 +1,4 @@
-# michalik.no is meant to be indexed — everything is crawlable except /cv/.
+# michalik.no is meant to be indexed. Everything is crawlable except /cv/.
 #
 # /cv/ holds an AES-256-GCM encrypted copy of my CV, unlocked in the browser by
 # the download button in the footer. There is nothing readable in it to scrape,

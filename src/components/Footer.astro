@@ -1,16 +1,16 @@
 ---
 import { socialLinks, site } from "../config";
-import SocialIcon from "./SocialIcon.astro";
 import CvDownload from "./CvDownload.astro";
+import SocialIcon from "./SocialIcon.astro";
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-border/60 mt-24">
-  <div
-    class="mx-auto flex max-w-3xl flex-col gap-4 px-6 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
-  >
+<footer class="mt-24 border-t border-border/60">
+  <div class="mx-auto flex max-w-3xl flex-col gap-4 px-6 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
     <div>
-      <p>© {year} {site.name}</p>
+      <p>
+        © {year} {site.name}
+      </p>
       <p class="mt-1 text-xs">
         Built with Astro ·{" "}
         <a
@@ -25,21 +25,21 @@ const year = new Date().getFullYear();
     </div>
     <ul class="flex flex-wrap gap-5">
       <CvDownload />
-      {
-        socialLinks.map((link) => (
-          <li>
-            <a
-              href={link.href}
-              class="inline-flex items-center gap-2 transition-colors hover:text-accent"
-              target={link.href.startsWith("http") ? "_blank" : undefined}
-              rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-            >
-              <SocialIcon name={link.icon} class="h-4 w-4" />
-              {link.label}
-            </a>
-          </li>
-        ))
-      }
+      {socialLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class="inline-flex items-center gap-2 transition-colors hover:text-accent"
+            target={link.href.startsWith("http") ? "_blank" : undefined}
+            rel={
+              link.href.startsWith("http") ? "noopener noreferrer" : undefined
+            }
+          >
+            <SocialIcon name={link.icon} class="h-4 w-4" />
+            {link.label}
+          </a>
+        </li>
+      ))}
     </ul>
   </div>
 </footer>

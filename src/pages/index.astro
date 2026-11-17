@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import TypingTagline from "../components/TypingTagline.tsx";
+
 import SocialIcon from "../components/SocialIcon.astro";
+import TypingTagline from "../components/TypingTagline.astro";
 import {
   site,
   socialLinks,
@@ -14,8 +14,9 @@ import {
   projects,
   contactFormAccessKey,
 } from "../config";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const work = (await getCollection("work")).sort(
+const work = (await getCollection("work")).toSorted(
   (a, b) => b.data.order - a.data.order,
 );
 
@@ -31,12 +32,9 @@ const scholar =
     class="relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-3xl flex-col justify-center px-6 pt-24 pb-16"
   >
     <div class="animate-rise">
-      <h1 class="text-4xl font-bold tracking-tight sm:text-6xl">
-        {site.name}
-      </h1>
+      <h1 class="text-4xl font-bold tracking-tight sm:text-6xl">{site.name}</h1>
       <p class="mt-4 min-h-14 text-lg text-muted sm:min-h-0">
         <TypingTagline
-          client:load
           phrases={[
             "Senior Software Developer",
             "Full stack, web & mobile",
@@ -48,13 +46,14 @@ const scholar =
       </p>
 
       <p class="mt-8 max-w-2xl leading-relaxed text-fg/90">
-        Senior full-stack developer who has been programming since childhood, with
-        7+ years of professional experience building and shipping web and mobile
-        applications. Currently in financial services at Storebrand, I work end to
-        end — React/TypeScript front-ends, back-end APIs and cloud/CI-CD — with a
-        focus on quality, accessibility and maintainable code, and with AI agents as
-        part of my everyday workflow. A former research scientist (PhD), I bring
-        analytical rigour and clear communication to every team.
+        Senior full-stack developer who has been programming since childhood,
+        with 7+ years of professional experience building and shipping web and
+        mobile applications. Currently in financial services at Storebrand, I
+        work end to end, from React/TypeScript front-ends to back-end APIs and
+        cloud/CI-CD, with a focus on quality, accessibility and maintainable
+        code, and with AI agents as part of my everyday workflow. A former
+        research scientist (PhD), I bring analytical rigour and clear
+        communication to every team.
       </p>
 
       <div class="mt-8 flex flex-wrap gap-4 text-sm">
@@ -64,19 +63,17 @@ const scholar =
         >
           Get in touch
         </a>
-        {
-          socialLinks.map((l) => (
-            <a
-              href={l.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 rounded-md border border-border bg-surface/60 px-4 py-2 font-medium text-fg/80 transition-colors hover:border-accent hover:bg-surface hover:text-accent"
-            >
-              <SocialIcon name={l.icon} class="h-4 w-4" />
-              {l.label}
-            </a>
-          ))
-        }
+        {socialLinks.map((l) => (
+          <a
+            href={l.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-md border border-border bg-surface/60 px-4 py-2 font-medium text-fg/80 transition-colors hover:border-accent hover:bg-surface hover:text-accent"
+          >
+            <SocialIcon name={l.icon} class="h-4 w-4" />
+            {l.label}
+          </a>
+        ))}
       </div>
     </div>
 
@@ -93,160 +90,166 @@ const scholar =
   <section id="work" data-section="work" class="mx-auto max-w-3xl px-6 py-24">
     <h2 class="reveal text-2xl font-semibold tracking-tight">Experience</h2>
     <div class="mt-10 space-y-10">
-      {
-        work.map(async (item) => {
-          const { Content } = await render(item);
-          return (
-            <article class="reveal border-l border-border pl-6">
-              <div class="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 class="text-lg font-semibold">
-                  {item.data.link ? (
-                    <a
-                      href={item.data.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="hover:text-accent"
-                    >
-                      {item.data.title} ↗
-                    </a>
-                  ) : (
-                    item.data.title
-                  )}
-                </h3>
-                {item.data.period && (
-                  <span class="font-mono text-xs text-muted">{item.data.period}</span>
+      {work.map(async (item) => {
+        const { Content } = await render(item);
+        return (
+          <article class="reveal border-l border-border pl-6">
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h3 class="text-lg font-semibold">
+                {item.data.link ? (
+                  <a
+                    href={item.data.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:text-accent"
+                  >
+                    {item.data.title} ↗
+                  </a>
+                ) : (
+                  item.data.title
                 )}
-              </div>
-              {item.data.role && (
-                <p class="mt-1 text-sm text-accent">{item.data.role}</p>
+              </h3>
+              {item.data.period && (
+                <span class="font-mono text-xs text-muted">
+                  {item.data.period}
+                </span>
               )}
-              <p class="mt-3 text-fg/90">{item.data.summary}</p>
-              <div class="prose prose-invert mt-3 max-w-none text-sm text-muted">
-                <Content />
-              </div>
-              {item.data.tags.length > 0 && (
-                <ul class="mt-4 flex flex-wrap gap-2">
-                  {item.data.tags.map((tag) => (
-                    <li class="rounded-full border border-border px-3 py-1 font-mono text-xs text-muted">
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </article>
-          );
-        })
-      }
+            </div>
+            {item.data.role && (
+              <p class="mt-1 text-sm text-accent">{item.data.role}</p>
+            )}
+            <p class="mt-3 text-fg/90">{item.data.summary}</p>
+            <div class="prose mt-3 max-w-none text-sm text-muted prose-invert">
+              <Content />
+            </div>
+            {item.data.tags.length > 0 && (
+              <ul class="mt-4 flex flex-wrap gap-2">
+                {item.data.tags.map((tag) => (
+                  <li class="rounded-full border border-border px-3 py-1 font-mono text-xs text-muted">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </article>
+        );
+      })}
     </div>
   </section>
 
   <!-- PROJECTS -->
-  <section id="projects" data-section="projects" class="mx-auto max-w-3xl px-6 py-24">
+  <section
+    id="projects"
+    data-section="projects"
+    class="mx-auto max-w-3xl px-6 py-24"
+  >
     <h2 class="reveal text-2xl font-semibold tracking-tight">Tinkering</h2>
     <div class="mt-10 space-y-10">
-      {
-        projects.map((p) => (
-          <article class="reveal border-l border-border pl-6">
-            <div class="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 class="text-lg font-semibold">
-                <a
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hover:text-accent"
-                >
-                  {p.name} ↗
-                </a>
-              </h3>
-              {p.demo && (
-                <a
-                  href={p.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-mono text-xs text-accent hover:underline"
-                >
-                  Live demo
-                </a>
-              )}
-            </div>
-            <p class="mt-3 text-fg/90">{p.description}</p>
-            <ul class="mt-4 flex flex-wrap gap-2">
-              {p.tags.map((tag) => (
-                <li class="rounded-full border border-border px-3 py-1 font-mono text-xs text-muted">
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          </article>
-        ))
-      }
+      {projects.map((p) => (
+        <article class="reveal border-l border-border pl-6">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="text-lg font-semibold">
+              <a
+                href={p.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-accent"
+              >
+                {p.name} ↗
+              </a>
+            </h3>
+            {p.demo && (
+              <a
+                href={p.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-mono text-xs text-accent hover:underline"
+              >
+                Live demo
+              </a>
+            )}
+          </div>
+          <p class="mt-3 text-fg/90">{p.description}</p>
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {p.tags.map((tag) => (
+              <li class="rounded-full border border-border px-3 py-1 font-mono text-xs text-muted">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
     </div>
   </section>
 
   <!-- SKILLS / EDUCATION / PUBLICATIONS -->
-  <section id="skills" data-section="skills" class="mx-auto max-w-3xl px-6 py-24">
+  <section
+    id="skills"
+    data-section="skills"
+    class="mx-auto max-w-3xl px-6 py-24"
+  >
     <h2 class="reveal text-2xl font-semibold tracking-tight">Skills</h2>
     <dl class="mt-8 space-y-4">
-      {
-        skills.map((s) => (
-          <div class="reveal sm:grid sm:grid-cols-[220px_1fr] sm:gap-4">
-            <dt class="font-mono text-sm text-accent">{s.group}</dt>
-            <dd class="mt-1 text-sm text-muted sm:mt-0">{s.items}</dd>
-          </div>
-        ))
-      }
+      {skills.map((s) => (
+        <div class="reveal sm:grid sm:grid-cols-[220px_1fr] sm:gap-4">
+          <dt class="font-mono text-sm text-accent">{s.group}</dt>
+          <dd class="mt-1 text-sm text-muted sm:mt-0">{s.items}</dd>
+        </div>
+      ))}
     </dl>
 
     <h3 class="reveal mt-16 text-xl font-semibold">Education</h3>
     <ul class="mt-6 space-y-4">
-      {
-        education.map((e) => (
-          <li class="reveal">
-            <p class="font-medium">{e.degree}</p>
-            <p class="text-sm text-muted">{e.org}</p>
-            <p class="font-mono text-xs text-muted">{e.note}</p>
-            {e.project && (
-              <p class="mt-1 text-sm text-muted italic">Project: {e.project}</p>
-            )}
-          </li>
-        ))
-      }
+      {education.map((e) => (
+        <li class="reveal">
+          <p class="font-medium">{e.degree}</p>
+          <p class="text-sm text-muted">{e.org}</p>
+          <p class="font-mono text-xs text-muted">{e.note}</p>
+          {e.project && (
+            <p class="mt-1 text-sm text-muted italic">Project: {e.project}</p>
+          )}
+        </li>
+      ))}
     </ul>
 
     <h3 class="reveal mt-16 text-xl font-semibold">Selected publications</h3>
     <p class="reveal mt-3 text-sm text-muted">
       Full list on{" "}
-      <a href={scholar} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+      <a
+        href={scholar}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-accent hover:underline"
+      >
         Google Scholar
-      </a>.
+      </a>
+      .
     </p>
     <ul class="mt-4 space-y-3 text-sm text-muted">
-      {publications.map((p) => <li class="reveal border-l border-border pl-4">{p}</li>)}
+      {publications.map((p) => (
+        <li class="reveal border-l border-border pl-4">{p}</li>
+      ))}
     </ul>
 
     <div class="mt-16 grid gap-12 sm:grid-cols-2">
       <div>
         <h3 class="reveal text-xl font-semibold">Languages</h3>
         <ul class="mt-6 space-y-2 text-sm">
-          {
-            languages.map((l) => (
-              <li class="reveal flex items-baseline justify-between gap-4 border-b border-border/60 pb-2">
-                <span class="text-fg/90">{l.name}</span>
-                <span class="font-mono text-xs text-muted">{l.level}</span>
-              </li>
-            ))
-          }
+          {languages.map((l) => (
+            <li class="reveal flex items-baseline justify-between gap-4 border-b border-border/60 pb-2">
+              <span class="text-fg/90">{l.name}</span>
+              <span class="font-mono text-xs text-muted">{l.level}</span>
+            </li>
+          ))}
         </ul>
       </div>
 
       <div>
         <h3 class="reveal text-xl font-semibold">Interests</h3>
         <ul class="mt-6 space-y-2 text-sm text-muted">
-          {
-            interests.map((interest) => (
-              <li class="reveal border-b border-border/60 pb-2">{interest}</li>
-            ))
-          }
+          {interests.map((interest) => (
+            <li class="reveal border-b border-border/60 pb-2">{interest}</li>
+          ))}
         </ul>
       </div>
     </div>
@@ -271,7 +274,11 @@ const scholar =
       class="reveal mt-8 max-w-xl space-y-5"
     >
       <input type="hidden" name="access_key" value={contactFormAccessKey} />
-      <input type="hidden" name="subject" value="New message from michalik.no" />
+      <input
+        type="hidden"
+        name="subject"
+        value="New message from michalik.no"
+      />
       <input type="hidden" name="from_name" value="michalik.no contact form" />
       <!-- Honeypot: bots fill this, humans never see it -->
       <input
@@ -286,7 +293,7 @@ const scholar =
         <div>
           <label
             for="contact-name"
-            class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-muted"
+            class="mb-1.5 block font-mono text-xs tracking-wider text-muted uppercase"
           >
             Name
           </label>
@@ -296,14 +303,14 @@ const scholar =
             type="text"
             required
             autocomplete="name"
-            class="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-muted/60 transition-colors focus:border-accent focus:outline-none"
+            class="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-fg transition-colors placeholder:text-muted/60 focus:border-accent focus:outline-none"
             placeholder="Your name"
           />
         </div>
         <div>
           <label
             for="contact-email"
-            class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-muted"
+            class="mb-1.5 block font-mono text-xs tracking-wider text-muted uppercase"
           >
             Email
           </label>
@@ -313,7 +320,7 @@ const scholar =
             type="email"
             required
             autocomplete="email"
-            class="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-muted/60 transition-colors focus:border-accent focus:outline-none"
+            class="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-fg transition-colors placeholder:text-muted/60 focus:border-accent focus:outline-none"
             placeholder="you@example.com"
           />
         </div>
@@ -322,7 +329,7 @@ const scholar =
       <div>
         <label
           for="contact-message"
-          class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-muted"
+          class="mb-1.5 block font-mono text-xs tracking-wider text-muted uppercase"
         >
           Message
         </label>
@@ -331,8 +338,9 @@ const scholar =
           name="message"
           rows="5"
           required
-          class="w-full resize-y rounded-md border border-border bg-surface px-3 py-2 text-sm text-fg placeholder:text-muted/60 transition-colors focus:border-accent focus:outline-none"
-          placeholder="What would you like to talk about?"></textarea>
+          class="w-full resize-y rounded-md border border-border bg-surface px-3 py-2 text-sm text-fg transition-colors placeholder:text-muted/60 focus:border-accent focus:outline-none"
+          placeholder="What would you like to talk about?"
+        ></textarea>
       </div>
 
       <div class="flex flex-wrap items-center gap-4">
@@ -347,8 +355,7 @@ const scholar =
           role="status"
           aria-live="polite"
           class="text-sm"
-        >
-        </p>
+        ></p>
       </div>
     </form>
 
@@ -357,6 +364,9 @@ const scholar =
   </section>
 
   <script>
+    const rgba = (c: [number, number, number], alpha: number) =>
+      `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${alpha})`;
+
     const init = () => {
       const reduce = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -397,9 +407,6 @@ const scholar =
           Math.round(a[2] + (b[2] - a[2]) * f),
         ];
       };
-      const rgba = (c: [number, number, number], alpha: number) =>
-        `rgba(${c[0]}, ${c[1]}, ${c[2]}, ${alpha})`;
-
       // Hue position combines a slow, always-on ambient drift (so the colours
       // keep shifting even at rest, like a real aurora) with the scroll offset.
       let ambient = 0; // palette loops accumulated over time
@@ -485,8 +492,9 @@ const scholar =
       // Scroll-spy: highlight the active nav link for the section in view.
       const navLinks =
         document.querySelectorAll<HTMLAnchorElement>("[data-nav]");
-      const sections =
-        document.querySelectorAll<HTMLElement>("section[data-section]");
+      const sections = document.querySelectorAll<HTMLElement>(
+        "section[data-section]",
+      );
 
       const spy = new IntersectionObserver(
         (entries) => {
@@ -505,15 +513,15 @@ const scholar =
       );
       sections.forEach((section) => spy.observe(section));
 
-      // Contact form — submit to Web3Forms without leaving the page.
+      // Contact form: submit to Web3Forms without leaving the page.
       const form = document.getElementById(
         "contact-form",
       ) as HTMLFormElement | null;
       if (form) {
-        const statusEl =
-          form.querySelector<HTMLElement>("[data-form-status]");
-        const submitBtn =
-          form.querySelector<HTMLButtonElement>('button[type="submit"]');
+        const statusEl = form.querySelector<HTMLElement>("[data-form-status]");
+        const submitBtn = form.querySelector<HTMLButtonElement>(
+          'button[type="submit"]',
+        );
         const setStatus = (message: string, tone: string) => {
           if (statusEl) {
             statusEl.textContent = message;
